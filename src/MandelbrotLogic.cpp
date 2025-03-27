@@ -1,15 +1,19 @@
-#include <SFML/Graphics.hpp>
-
 #ifndef GENERAL_H_INCLUDED
 #include "../headers/MandelbrotGeneral.h"
 #endif
 
+#include "../headers/MandelbrotLogic.h"
+
+#include <SFML/Graphics.hpp>
+
 //--------------------------------------------------------------------------------------------------------------------------
-inline void DrawSingleIteration (Mandelbrot* mandelbrot)
+void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
 {
-    mandelbrot -> window -> clear ();
-    mandelbrot -> window -> draw (*(mandelbrot -> pixels));
-    mandelbrot -> window -> display ();
+    sf::Event event;
+    while (mandelbrot -> window -> pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            mandelbrot -> window -> close();
+    }
 }
 //--------------------------------------------------------------------------------------------------------------------------
-

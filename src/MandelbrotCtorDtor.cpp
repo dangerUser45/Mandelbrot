@@ -6,10 +6,11 @@
 
 #include <SFML/Graphics.hpp>
 
-int CtorCommon (Mandelbrot* mandelbrot)
+//--------------------------------------------------------------------------------------------------------------------------
+int MandelbrotCtorCommon (Mandelbrot* mandelbrot)
 {
 
-    sf::RenderWindow* window = new sf::RenderWindow (sf::VideoMode(900, 600), "SUUUDAAAA");
+    sf::RenderWindow* window = new sf::RenderWindow (sf::VideoMode(900, 600), "Mandelbrot");
     sf::VertexArray* pixels  = new sf::VertexArray  (sf::Points, 900 * 600);
 
     mandelbrot -> window = window;
@@ -17,3 +18,12 @@ int CtorCommon (Mandelbrot* mandelbrot)
 
     return 0;
 }
+//--------------------------------------------------------------------------------------------------------------------------
+int MandelbrotDtorCommon (Mandelbrot* mandelbrot)
+{
+    delete mandelbrot -> window;
+    delete mandelbrot -> pixels;
+
+    return 0;
+}
+//--------------------------------------------------------------------------------------------------------------------------

@@ -11,8 +11,8 @@ Flags	 = 	-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio \
 #----------------------------------------------------------------------------------
 #==================================================================================
 
-$(Target): 		$(B)MandelbrotMain.o $(B)MandelbrotCtorDtor.o $(B)MandelbrotDraw.o
-	$(Compiler) $(B)MandelbrotMain.o $(B)MandelbrotCtorDtor.o $(B)MandelbrotDraw.o  -o $(B)Mandelbrot.out $(Flags)
+$(Target): 		$(B)MandelbrotMain.o $(B)MandelbrotCtorDtor.o $(B)MandelbrotDraw.o $(B)MandelbrotLogic.o
+	$(Compiler) $(B)MandelbrotMain.o $(B)MandelbrotCtorDtor.o $(B)MandelbrotDraw.o $(B)MandelbrotLogic.o -o $(B)Mandelbrot.out $(Flags)
 #----------------------------------------------------------------------------------
 
 $(B)MandelbrotMain.o :		$(SRC)MandelbrotMain.cpp			\
@@ -26,15 +26,25 @@ $(B)MandelbrotMain.o :		$(SRC)MandelbrotMain.cpp			\
 #----------------------------------------------------------------------------------
 
 $(B)MandelbrotCtorDtor.o: 	$(SRC)MandelbrotCtorDtor.cpp		\
+							$(H)MandelbrotCtorDtor.h			\
 							$(H)MandelbrotGeneral.h
 
 	$(Compiler) -c $(SRC)MandelbrotCtorDtor.cpp -o $(B)MandelbrotCtorDtor.o $(Flags)
 #----------------------------------------------------------------------------------
 
-$(B)MandelbrotDraw.o: 	$(SRC)MandelbrotDraw.cpp				\
+$(B)MandelbrotDraw.o: 		$(SRC)MandelbrotDraw.cpp			\
+							$(H)MandelbrotDraw.h				\
 							$(H)MandelbrotGeneral.h
 
 	$(Compiler) -c $(SRC)MandelbrotDraw.cpp -o $(B)MandelbrotDraw.o $(Flags)
+#----------------------------------------------------------------------------------
+
+$(B)MandelbrotLogic.o: 		$(SRC)MandelbrotLogic.cpp			\
+							$(H)MandelbrotLogic.h				\
+							$(H)MandelbrotConsts.h				\
+							$(H)MandelbrotGeneral.h
+
+	$(Compiler) -c $(SRC)MandelbrotLogic.cpp -o $(B)MandelbrotLogic.o $(Flags)
 #==================================================================================
 #----------------------------------------------------------------------------------
 #==================================================================================

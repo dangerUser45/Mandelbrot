@@ -2,4 +2,5 @@
 #include "../headers/MandelbrotGeneral.h"
 #endif
 
-int CtorCommon (Mandelbrot* mandelbrot);
+int MandelbrotCtorCommon (Mandelbrot* mandelbrot);
+int MandelbrotDtorCommon (Mandelbrot* mandelbrot);

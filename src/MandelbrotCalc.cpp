@@ -32,7 +32,7 @@ inline void MandelbrotCalculation (sf::VertexArray* pixels)
             }
 
             (*pixels)[y_pos * 900 + x_pos].position = sf::Vector2f((float)x_pos, (float)y_pos);
-            (*pixels)[y_pos * 900 + x_pos].color    = sf::Color((n * 16) % 256, (n * 8) % 256, (n * 4) % 256);
+            (*pixels)[y_pos * 900 + x_pos].color    = sf::Color((n * 5) % 256, (n * 10) % 256, (n * 20) % 256);
         }
     }
 }
