@@ -1,9 +1,9 @@
-#include "../headers/MandelbrotConsts.h"
-#include "../headers/MandelbrotGeneral.h"
-#include "../headers/MandelbrotCtorDtor.h"
-#include "../headers/MandelbrotCalc.h"
-#include "../headers/MandelbrotLogic.h"
-#include "../headers/MandelbrotDraw.h"
+#include <MandelbrotConsts.h>
+#include <MandelbrotGeneral.h>
+#include <MandelbrotCtorDtor.h>
+#include <MandelbrotCalc.h>
+#include <MandelbrotLogic.h>
+#include <MandelbrotDraw.h>
 
 #include <SFML/Graphics.hpp>
 

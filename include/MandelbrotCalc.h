@@ -1,5 +1,5 @@
 #ifndef CONSTS_INCLUDED
-#include "../headers/MandelbrotConsts.h"
+#include <MandelbrotConsts.h>
 #endif
 
 #include <SFML/Graphics.hpp>
@@ -9,7 +9,7 @@ inline void MandelbrotCalculation (sf::VertexArray* pixels)
 {
     for (size_t y_pos = 0; y_pos < 600; ++y_pos, y0 -= dy)
     {
-        x0 = -2.0f;
+        x0 = -2.0;
 
         for (size_t x_pos = 0; x_pos < 900; ++x_pos, x0 += dx)
         {

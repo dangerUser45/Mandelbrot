@@ -1,8 +1,8 @@
 #ifndef GENERAL_H_INCLUDED
-#include "../headers/MandelbrotGeneral.h"
+#include <MandelbrotGeneral.h>
 #endif
 
-#include "../headers/MandelbrotCtorDtor.h"
+#include <MandelbrotCtorDtor.h>
 
 #include <SFML/Graphics.hpp>
 
