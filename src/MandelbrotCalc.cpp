@@ -10,7 +10,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <time.h>
-
+#include <iostream>
 //--------------------------------------------------------------------------------------------------------------------------
 void MandelbrotCalculation (Mandelbrot* mandelbrot)
 {
@@ -25,6 +25,11 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
     double x0 = center_x - width  / 2;
     double y0 = center_y + height / 2;
 
+    const int repeat_value = mandelbrot -> repeat_value;
+    std::cout << "\nrepeat_value = " << repeat_value << "\n" << std::endl;
+
+    int n = 0;
+
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);
 
@@ -34,22 +39,25 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
 
         for (size_t x_pos = 0; x_pos < X_WINDOW_SIZE; ++x_pos, x0 += pixel_size)
         {
-            double x = x0;
-            double y = y0;
-
-            int n = 0;
-            for (; n < nmax; ++n)
+            for (int i = 0; i < repeat_value; i++)
             {
-                double x2 = x * x;
-                double y2 = y * y;
-                double xy = x * y;
+                double x = x0;
+                double y = y0;
 
-                double r2 = x2 + y2;
+                n = 0;
+                for (; n < nmax; ++n)
+                {
+                    double x2 = x * x;
+                    double y2 = y * y;
+                    double xy = x * y;
 
-                if (r2 >= r2max) break;
+                    double r2 = x2 + y2;
 
-                x = x2 - y2 + x0;
-                y = xy + xy + y0;
+                    if (r2 >= r2max) break;
+
+                    x = x2 - y2 + x0;
+                    y = xy + xy + y0;
+                }
             }
 
             (*(mandelbrot -> pixels))[y_pos * X_WINDOW_SIZE + x_pos].position = sf::Vector2f((float)x_pos, (float)y_pos);

@@ -3,6 +3,12 @@ SRC			= src/
 B			= build/
 
 CXX          = g++
+
+CPPSRC 		= $(SRC)MandelbrotMain.cpp $(SRC)MandelbrotCalc.cpp $(SRC)MandelbrotCtorDtor.cpp $(SRC)MandelbrotDraw.cpp $(SRC)MandelbrotLogic.cpp
+CPPOBJ 		= $(CPPSRC:$(SRC)%.cpp=$(B)%.o)
+CPPDEP     := $(patsubst %.o, %.d, $(CPPOBJ))
+
+CMD	   		= $(B)Mandelbrot.out
 #----------------------------------------------------------------------------------
 
 CXXFLAGS_DEBUG	 := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio \
@@ -27,11 +33,14 @@ endif
 override CXXFLAGS += -I./include/
 #----------------------------------------------------------------------------------
 
-CPPSRC 		= $(SRC)MandelbrotMain.cpp $(SRC)MandelbrotCalc.cpp $(SRC)MandelbrotCtorDtor.cpp $(SRC)MandelbrotDraw.cpp $(SRC)MandelbrotLogic.cpp
-CPPOBJ 		= $(CPPSRC:$(SRC)%.cpp=$(B)%.o)
-CPPDEP     := $(patsubst %.o, %.d, $(CPPOBJ))
+NO_REPEATS := 1
+REPEATS ?= 1
 
-CMD	   		= $(B)Mandelbrot.out
+ifeq ($(REPEATS),NO_REPEATS)
+	REP_ARG := $(NO_REPEATS)
+else
+	REP_ARG := $(REPEATS)
+endif
 #==================================================================================
 #----------------------------------------------------------------------------------
 #==================================================================================
@@ -64,5 +73,5 @@ clear:
 
 .PHONY: run
 run:
-	$(CMD)
+	$(CMD) $(REP_ARG)
 #----------------------------------------------------------------------------------

@@ -4,5 +4,6 @@
 #include <MandelbrotGeneral.h>
 #endif
 
-int MandelbrotCtorCommon (Mandelbrot* mandelbrot);
+int CheckArg (int argc, char** argv);
+Mandelbrot* MandelbrotCtorCommon (int argc, char** argv);
 int MandelbrotDtorCommon (Mandelbrot* mandelbrot);

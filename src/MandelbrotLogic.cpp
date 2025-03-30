@@ -27,36 +27,22 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
                 break;
             }
 
-            case sf::Event::MouseWheelScrolled:
-            {
-                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-                    std::cout << "wheel type: vertical" << std::endl;
-                else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel)
-                    std::cout << "wheel type: horizontal" << std::endl;
-                else
-                std::cout << "wheel type: unknown" << std::endl;
-                std::cout << "wheel movement: " << event.mouseWheelScroll.delta << std::endl;
-                std::cout << "mouse x: " << event.mouseWheelScroll.x << std::endl;
-                std::cout << "mouse y: " << event.mouseWheelScroll.y << std::endl;
-                break;
-            }
-
             case sf::Event::KeyPressed:
             {
                 if (event.key.scancode == sf::Keyboard::Scan::Escape)
                     mandelbrot -> window -> close();
 
                 else if (event.key.scancode == sf::Keyboard::Scan::W)
-                    MoveCenter (mandelbrot, 0, -10);
+                    MoveCenter (mandelbrot, 0, -PIXEL_SHIFT);
 
                 else if (event.key.scancode == sf::Keyboard::Scan::A)
-                    MoveCenter (mandelbrot, -10, 0);
+                    MoveCenter (mandelbrot, -PIXEL_SHIFT, 0);
 
                 else if (event.key.scancode == sf::Keyboard::Scan::S)
-                    MoveCenter (mandelbrot, 0, +10);
+                    MoveCenter (mandelbrot, 0, +PIXEL_SHIFT);
 
                 else if (event.key.scancode == sf::Keyboard::Scan::D)
-                    MoveCenter (mandelbrot, +10, 0);
+                    MoveCenter (mandelbrot, +PIXEL_SHIFT, 0);
 
                 else if (event.key.control)
                 {
@@ -64,16 +50,11 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
                         /* load data to file */ break;
 
                     else if (event.key.scancode == sf::Keyboard::Scan::Equal)
-                    {
-                        HandleZoom (mandelbrot, true);
-                        mandelbrot -> pixel_size = GetCurrentPixelSize (mandelbrot);
-                    }
+                        mandelbrot -> pixel_size = GetCurrentPixelSize (mandelbrot, true);
+
 
                     else if (event.key.scancode == sf::Keyboard::Scan::Hyphen)
-                    {
-                        mandelbrot -> pixel_size = GetCurrentPixelSize (mandelbrot);
-                        HandleZoom (mandelbrot, false);
-                    }
+                        mandelbrot -> pixel_size = GetCurrentPixelSize (mandelbrot, false);
                 }
             }
 
@@ -83,28 +64,21 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
     }
 }
 //--------------------------------------------------------------------------------------------------------------------------
-double GetCurrentPixelSize(Mandelbrot* mandelbrot)
+double GetCurrentPixelSize(Mandelbrot* mandelbrot, bool zoom)
 {
-    return mandelbrot -> pixel_size / (1.0 + mandelbrot -> zoom_level * 0.1);
-}
-//--------------------------------------------------------------------------------------------------------------------------
-void HandleZoom(Mandelbrot* mandelbrot, bool zoomIn)
-{
-    if (zoomIn)
-        mandelbrot -> zoom_level += zoomStep;
+    double new_pixel_size = 0;
 
+    if (zoom)
+        new_pixel_size = mandelbrot -> pixel_size / ZOOM_RATE;
     else
-    {
-        if (mandelbrot -> zoom_level > -7.0)
-            mandelbrot -> zoom_level -= zoomStep;
+        new_pixel_size = mandelbrot -> pixel_size * ZOOM_RATE;
 
-    }
-    std::cout << "Current zoom level = " << mandelbrot -> zoom_level <<std::endl;
+    return new_pixel_size;
 }
 //--------------------------------------------------------------------------------------------------------------------------
 void MoveCenter(Mandelbrot* mandelbrot, double dx_pixels, double dy_pixels)
 {
-    const double pixel_size = GetCurrentPixelSize(mandelbrot);
+    const double pixel_size = mandelbrot -> pixel_size;
 
     mandelbrot -> center_x += dx_pixels * pixel_size;
     mandelbrot -> center_y -= dy_pixels * pixel_size;
