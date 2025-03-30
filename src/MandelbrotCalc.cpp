@@ -10,7 +10,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <time.h>
-#include <iostream>
+
 //--------------------------------------------------------------------------------------------------------------------------
 void MandelbrotCalculation (Mandelbrot* mandelbrot)
 {
@@ -26,7 +26,6 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
     double y0 = center_y + height / 2;
 
     const int repeat_value = mandelbrot -> repeat_value;
-    std::cout << "\nrepeat_value = " << repeat_value << "\n" << std::endl;
 
     int n = 0;
 
@@ -35,7 +34,7 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
 
     for (size_t y_pos = 0; y_pos < Y_WINDOW_SIZE; ++y_pos, y0 -= pixel_size)
     {
-        x0 = center_x - width/2;
+        x0 = center_x - width / 2;
 
         for (size_t x_pos = 0; x_pos < X_WINDOW_SIZE; ++x_pos, x0 += pixel_size)
         {
@@ -60,8 +59,12 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
                 }
             }
 
+            #ifndef STAT_MODE
             (*(mandelbrot -> pixels))[y_pos * X_WINDOW_SIZE + x_pos].position = sf::Vector2f((float)x_pos, (float)y_pos);
             (*(mandelbrot -> pixels))[y_pos * X_WINDOW_SIZE + x_pos].color    = sf::Color((n * 22) % 256, (n * 14) % 256, (n * 17) % 256);
+            #endif
+            mandelbrot -> n = n;
+
         }
     }
 

@@ -19,4 +19,5 @@ struct Mandelbrot
     double center_y;     // Центр по Y
 
     int repeat_value;
+    int n;
 };

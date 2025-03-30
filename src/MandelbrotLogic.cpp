@@ -9,7 +9,6 @@
 #include <MandelbrotLogic.h>
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 //--------------------------------------------------------------------------------------------------------------------------
 void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
@@ -27,6 +26,7 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
                 break;
             }
 
+            #ifndef STAT_MODE
             case sf::Event::KeyPressed:
             {
                 if (event.key.scancode == sf::Keyboard::Scan::Escape)
@@ -57,6 +57,7 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
                         mandelbrot -> pixel_size = GetCurrentPixelSize (mandelbrot, false);
                 }
             }
+            #endif
 
             default:
                 break;

@@ -6,13 +6,14 @@
 #include <MandelbrotDraw.h>
 
 #include <SFML/Graphics.hpp>
-#include <Color.h>
 
 //--------------------------------------------------------------------------------------------------------------------------
 int main (int argc, char** argv)
 {
+    #ifndef STAT_MODE
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);
+    #endif
 
     Mandelbrot* mandelbrot = MandelbrotCtorCommon (argc, argv);
 
@@ -25,9 +26,12 @@ int main (int argc, char** argv)
 
     MandelbrotDtorCommon (mandelbrot);
 
+    #ifndef STAT_MODE
     clock_gettime(CLOCK_MONOTONIC, &end);
     long double duration_ms = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / ONE_BILLION;  //time in seconds
+
     printf("\nall time: %Lf seconds\r\n", duration_ms);
     fflush(stdout);
+    #endif
 }
 //--------------------------------------------------------------------------------------------------------------------------

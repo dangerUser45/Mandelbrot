@@ -27,25 +27,40 @@ else ifeq ($(BUILD), RELEASE)
 	CXXFLAGS = $(CXXFLAGS_RELEASE)
 
 else
-    $(error Unknown build type: $(BUILD). Use DEBUG or RELEASE)
+$(error Unknown build type: $(BUILD). Use DEBUG or RELEASE)
 endif
-
-override CXXFLAGS += -I./include/
 #----------------------------------------------------------------------------------
 
 NO_REPEATS := 1
-REPEATS ?= 1
+REPEATS    ?= $(NO_REPEATS)
 
 ifeq ($(REPEATS),NO_REPEATS)
 	REP_ARG := $(NO_REPEATS)
 else
 	REP_ARG := $(REPEATS)
 endif
+#----------------------------------------------------------------------------------
+
+MODE ?= PICTURE_MODE
+
+ifeq ($(MODE), PICTURE_MODE)
+CXXFLAGS := -DPICTURE_MODE $(CXXFLAGS)
+
+else ifeq ($(MODE), STAT_MODE)
+CXXFLAGS := -DSTAT_MODE $(CXXFLAGS)
+
+else
+$(error Unknown mode type: $(MODE). Use STAT_MODE or PICTURE_MODE)
+endif
+
+
+override CXXFLAGS += -I./include/
 #==================================================================================
 #----------------------------------------------------------------------------------
 #==================================================================================
 
 all:
+	@echo "CXXFLAGS = $(CXXFLAGS)"
 	$(CXX) $^ -o $(CMD) $(CXXFLAGS)
 
 #----------------------------------------------------------------------------------
@@ -65,11 +80,6 @@ all: $(CPPOBJ)
 clear:
 	rm -rf $(B)*
 #----------------------------------------------------------------------------------
-
-# STAT_MODE=0
-# PICTURE_MODE=1
-#
-# if (MODE)
 
 .PHONY: run
 run:
