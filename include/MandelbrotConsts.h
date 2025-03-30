@@ -2,11 +2,20 @@
 
 #define CONSTS_INCLUDED
 
-const int nmax      = 256;
-const double r2max   = 10.0 * 10.0;
+const int X_WINDOW_SIZE = 1350;
+const int Y_WINDOW_SIZE = 900;
 
-double x0 = -2.0;
-double y0 = 1.0;
+const int CENTRE_RELAT_WINDOW = 285;
 
-const double dx = 1.0 / (900.0 / 3.0);
-const double dy = 1.0 / 300.0;
+const int nmax          = 256;
+const double r2max      = 10.0 * 10.0;
+
+const double x_start    = -2.0;
+const double y_start    = 1.0;
+
+const double zoomStep   = 1.0;
+const double START_PIXEL_SIZE = 0.003;
+
+const double ONE_MILLION    = 1000000.0;
+const double ONE_THOUSAND   = 1000.0;
+

@@ -1,3 +1,7 @@
+#ifndef CONSTS_INCLUDED
+#include <MandelbrotConsts.h>
+#endif
+
 #ifndef GENERAL_H_INCLUDED
 #include <MandelbrotGeneral.h>
 #endif
@@ -10,8 +14,10 @@
 int MandelbrotCtorCommon (Mandelbrot* mandelbrot)
 {
 
-    sf::RenderWindow* window = new sf::RenderWindow (sf::VideoMode(900, 600), "Mandelbrot");
-    sf::VertexArray* pixels  = new sf::VertexArray  (sf::Points, 900 * 600);
+    sf::RenderWindow* window = new sf::RenderWindow (sf::VideoMode(X_WINDOW_SIZE,  Y_WINDOW_SIZE), "Mandelbrot");
+    window -> setPosition(sf::Vector2i(CENTRE_RELAT_WINDOW, 0));
+
+    sf::VertexArray* pixels  = new sf::VertexArray  (sf::Points,   X_WINDOW_SIZE * Y_WINDOW_SIZE);
 
     mandelbrot -> window = window;
     mandelbrot -> pixels = pixels;
