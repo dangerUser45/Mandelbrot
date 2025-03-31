@@ -40,7 +40,7 @@ else ifeq ($(ALG), NATIVE)
 CXXFLAGS := -DNATIVE_ALG $(CXXFLAGS) -march=native
 
 else ifeq ($(ALG), INTRINS)
-CXXFLAGS := -DINTRINS_ALG $(CXXFLAGS) -mavx2 -mfma
+CXXFLAGS := -DINTRINSICS_ALG $(CXXFLAGS) -mavx2 -mfma
 
 else
 $(error Unknown algorithm type: $(ALG). Use SIMPLE or NATIVE or INTRINS)
