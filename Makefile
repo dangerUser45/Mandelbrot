@@ -31,6 +31,22 @@ $(error Unknown build type: $(BUILD). Use DEBUG or RELEASE)
 endif
 #----------------------------------------------------------------------------------
 
+ALG ?= SIMPLE
+
+ifeq ($(ALG), SIMPLE)
+CXXFLAGS := -DSIMPLE_ALG $(CXXFLAGS)
+
+else ifeq ($(ALG), NATIVE)
+CXXFLAGS := -DNATIVE_ALG $(CXXFLAGS) -march=native
+
+else ifeq ($(ALG), INTRINS)
+CXXFLAGS := -DINTRINS_ALG $(CXXFLAGS) -mavx2 -mfma
+
+else
+$(error Unknown algorithm type: $(ALG). Use SIMPLE or NATIVE or INTRINS)
+endif
+#----------------------------------------------------------------------------------
+
 NO_REPEATS := 1
 REPEATS    ?= $(NO_REPEATS)
 
@@ -63,7 +79,7 @@ else ifeq ($(FLOAT_TYPE), DOUBLE)
 CXXFLAGS := -DFLOAT_TYPE=double $(CXXFLAGS)
 
 else ifeq ($(FLOAT_TYPE), LONG_DOUBLE)
-CXXFLAGS := -DFLOAT_TYPE=long double $(CXXFLAGS)
+CXXFLAGS := -DFLOAT_TYPE="long double" $(CXXFLAGS)
 
 else
 $(error Unknown float type: $(FLOAT_TYPE). Use FLOAT or DOUBLE or LONG_DOUBLE)
@@ -71,8 +87,6 @@ endif
 
 
 override CXXFLAGS += -I./include/
-#override CXXFLAGS += -mavx2 -mfma
-override CXXFLAGS += -march=native
 #==================================================================================
 #----------------------------------------------------------------------------------
 #==================================================================================
