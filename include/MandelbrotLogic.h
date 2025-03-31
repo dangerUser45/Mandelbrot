@@ -5,5 +5,5 @@
 #endif
 
 void MandelbrotLogicCommon (Mandelbrot* mandelbrot);
-double GetCurrentPixelSize(Mandelbrot* mandelbrot, bool zoom);
-void MoveCenter(Mandelbrot* mandelbrot, double dx_pixels, double dy_pixels);
+FLOAT_TYPE GetCurrentPixelSize (Mandelbrot* mandelbrot, bool zoom);
+void MoveCenter(Mandelbrot* mandelbrot, FLOAT_TYPE dx_pixels, FLOAT_TYPE dy_pixels);

@@ -52,9 +52,27 @@ CXXFLAGS := -DSTAT_MODE $(CXXFLAGS)
 else
 $(error Unknown mode type: $(MODE). Use STAT_MODE or PICTURE_MODE)
 endif
+#----------------------------------------------------------------------------------
+
+FLOAT_TYPE ?= FLOAT
+
+ifeq ($(FLOAT_TYPE), FLOAT)
+CXXFLAGS := -DFLOAT_TYPE=float $(CXXFLAGS)
+
+else ifeq ($(FLOAT_TYPE), DOUBLE)
+CXXFLAGS := -DFLOAT_TYPE=double $(CXXFLAGS)
+
+else ifeq ($(FLOAT_TYPE), LONG_DOUBLE)
+CXXFLAGS := -DFLOAT_TYPE=long double $(CXXFLAGS)
+
+else
+$(error Unknown float type: $(FLOAT_TYPE). Use FLOAT or DOUBLE or LONG_DOUBLE)
+endif
 
 
 override CXXFLAGS += -I./include/
+#override CXXFLAGS += -mavx2 -mfma
+override CXXFLAGS += -march=native
 #==================================================================================
 #----------------------------------------------------------------------------------
 #==================================================================================

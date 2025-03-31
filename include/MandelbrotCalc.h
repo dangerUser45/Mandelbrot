@@ -6,4 +6,4 @@
 
 #include <SFML/Graphics.hpp>
 
-void MandelbrotCalculation (Mandelbrot* mandelbrot);
+void MandelbrotCalculation(Mandelbrot* mandelbrot);

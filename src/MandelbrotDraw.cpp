@@ -11,7 +11,7 @@ void DrawSingleIteration (Mandelbrot* mandelbrot)
 {
     #ifndef STAT_MODE
     mandelbrot -> window -> clear ();
-    mandelbrot -> window -> draw (*(mandelbrot -> pixels));
+    mandelbrot -> window -> draw (*(mandelbrot -> sprite));
     mandelbrot -> window -> display ();
     #endif
 }

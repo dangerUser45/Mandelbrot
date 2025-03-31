@@ -65,9 +65,9 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
     }
 }
 //--------------------------------------------------------------------------------------------------------------------------
-double GetCurrentPixelSize(Mandelbrot* mandelbrot, bool zoom)
+FLOAT_TYPE GetCurrentPixelSize(Mandelbrot* mandelbrot, bool zoom)
 {
-    double new_pixel_size = 0;
+    FLOAT_TYPE new_pixel_size = 0;
 
     if (zoom)
         new_pixel_size = mandelbrot -> pixel_size / ZOOM_RATE;
@@ -77,9 +77,9 @@ double GetCurrentPixelSize(Mandelbrot* mandelbrot, bool zoom)
     return new_pixel_size;
 }
 //--------------------------------------------------------------------------------------------------------------------------
-void MoveCenter(Mandelbrot* mandelbrot, double dx_pixels, double dy_pixels)
+void MoveCenter(Mandelbrot* mandelbrot, FLOAT_TYPE dx_pixels, FLOAT_TYPE dy_pixels)
 {
-    const double pixel_size = mandelbrot -> pixel_size;
+    const FLOAT_TYPE pixel_size = mandelbrot -> pixel_size;
 
     mandelbrot -> center_x += dx_pixels * pixel_size;
     mandelbrot -> center_y -= dy_pixels * pixel_size;

@@ -1,3 +1,4 @@
+#include <SFML/Graphics/Texture.hpp>
 #ifndef CONSTS_INCLUDED
 #include <MandelbrotConsts.h>
 #endif
@@ -16,15 +17,25 @@
 {
     int repeat_value = CheckArg (argc, argv);
 
-    Mandelbrot* mandelbrot = new Mandelbrot {0, 0, 0, START_PIXEL_SIZE, X_CENTRE_START_POS, Y_CENTRE_START_POS, 0};
+    Mandelbrot* mandelbrot = new Mandelbrot {0, 0, 0, 0, 0, START_PIXEL_SIZE, X_CENTRE_START_POS, Y_CENTRE_START_POS, 0, 0};
 
     sf::RenderWindow* window = new sf::RenderWindow (sf::VideoMode(X_WINDOW_SIZE,  Y_WINDOW_SIZE), "Mandelbrot");
     window -> setPosition(sf::Vector2i(CENTRE_RELAT_WINDOW, 0));
 
-    sf::VertexArray* pixels  = new sf::VertexArray  (sf::Points,   X_WINDOW_SIZE * Y_WINDOW_SIZE);
+    sf::Uint8*   pixels  = new sf::Uint8[X_WINDOW_SIZE * Y_WINDOW_SIZE * 4]; // * 4 because pixels have 4 components (RGBA)
+    sf::Texture* texture = new sf::Texture;
+
+    texture -> create (X_WINDOW_SIZE, Y_WINDOW_SIZE);
+
+    sf::Sprite* sprite  = new sf::Sprite(*texture);
+    sprite -> setTexture(*texture);
 
     mandelbrot -> window = window;
-    mandelbrot -> pixels = pixels;
+
+    mandelbrot -> sprite  = sprite;
+    mandelbrot -> texture = texture;
+    mandelbrot -> pixels  = pixels;
+
     mandelbrot -> repeat_value = repeat_value;
 
     return mandelbrot;
@@ -33,7 +44,11 @@
 int MandelbrotDtorCommon (Mandelbrot* mandelbrot)
 {
     delete mandelbrot -> window;
+
+    delete mandelbrot ->sprite;
+    delete mandelbrot -> texture;
     delete mandelbrot -> pixels;
+
     delete mandelbrot;
 
     return 0;

@@ -11,12 +11,16 @@
 struct Mandelbrot
 {
     sf::RenderWindow* window;
-    sf::VertexArray* pixels;
+
+    sf::Sprite* sprite;
+    sf::Texture* texture;
+    sf::Uint8* pixels;
+
     sf::Event* event;
 
-    double pixel_size;   // Базовый размер пикселя (чем меньше - тем больше увеличение)
-    double center_x;     // Центр по X
-    double center_y;     // Центр по Y
+    FLOAT_TYPE pixel_size;   // Базовый размер пикселя (чем меньше - тем больше увеличение)
+    FLOAT_TYPE center_x;     // Центр по X
+    FLOAT_TYPE center_y;     // Центр по Y
 
     int repeat_value;
     int n;
