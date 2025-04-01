@@ -159,7 +159,7 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
             }
             #endif
 
-            //mandelbrot -> n = N[0] + N[1] + N[2] + N[3];
+            mandelbrot -> n = N[0];
         }
     }
 
@@ -199,59 +199,56 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
     {
         x0 = center_x - width / 2;
 
-        for (int x_pos = 0; x_pos < X_WINDOW_SIZE; x_pos += 8, x0 += pixel_size*4)
+        for (int x_pos = 0; x_pos < X_WINDOW_SIZE; x_pos += 8, x0 += pixel_size*8)
         {
-            __m256i N = _mm256_setzero_si256 ();                   //int N[4] = {0, 0, 0, 0};
+            __m256i N = _mm256_setzero_si256();
             for (int i = 0; i < repeat_value; i++)
             {
-                __m256 X0 = _mm256_set_ps ( x0 + pixel_size*7 , x0 + pixel_size*6 , x0 + pixel_size*5 , x0 + pixel_size*4 ,x0 + pixel_size*3 , x0 + pixel_size*2 , x0 + pixel_size , x0 );                       // FLOAT_TYPE X0[4] = {x0, x0 + pixel_size, x0 + pixel_size*2, x0 + pixel_size*3};
-                __m256 Y0 = _mm256_set_ps ( y0, y0, y0, y0, y0, y0, y0, y0);       //FLOAT_TYPE Y0[4] = {y0, y0,              y0,                y0};
+                __m256 X0 = _mm256_setr_ps(x0, x0 + pixel_size, x0 + pixel_size*2, x0 + pixel_size*3,
+                                           x0 + pixel_size*4, x0 + pixel_size*5, x0 + pixel_size*6, x0 + pixel_size*7);
 
-                __m256 X  = X0;                                                    //FLOAT_TYPE X[4]  = {}; for (int i = 0; i < 4; i++) {X[i] = X0[i];}
-                __m256 Y  = Y0;                                                    //FLOAT_TYPE Y[4]  = {}; for (int i = 0; i < 4; i++) {Y[i] = Y0[i];}
+                __m256 Y0 = _mm256_set1_ps(y0);
+
+                __m256 X = X0;
+                __m256 Y = Y0;
 
                 for (int n = 0; n < nmax; ++n)
                 {
-                    __m256 X2 = _mm256_mul_ps (X, X);                               //FLOAT_TYPE X2[4] = {}; for (int i = 0; i < 4; i++) { X2[i] = X[i] * X[i];}
-                    __m256 Y2 = _mm256_mul_ps (Y, Y);                               //FLOAT_TYPE Y2[4] = {}; for (int i = 0; i < 4; i++) { Y2[i] = Y[i] * Y[i];}
-                    __m256 XY = _mm256_mul_ps (X, Y);                               //FLOAT_TYPE XY[4] = {}; for (int i = 0; i < 4; i++) { XY[i] = X[i] * Y[i];}
+                    __m256 X2 = _mm256_mul_ps(X, X);
+                    __m256 Y2 = _mm256_mul_ps(Y, Y);
+                    __m256 XY = _mm256_mul_ps(X, Y);
 
-                    __m256 R2    = _mm256_add_ps (X2, Y2);                          //FLOAT_TYPE R2[4] = {}; for (int i = 0; i < 4; i++) { R2[i] = X2[i] + Y2[i];}
-                    __m256 R2MAX = _mm256_set_ps ( r2max, r2max, r2max, r2max, r2max, r2max, r2max, r2max);
+                    __m256 R2 = _mm256_add_ps(X2, Y2);
+                    __m256 mask = _mm256_cmp_ps(R2, _mm256_set1_ps(r2max), _CMP_LE_OQ);
 
-                    __m256 cmp   = _mm256_cmp_ps (R2, R2MAX, _CMP_LE_OQ);            // for (int i = 0; i < 4; i++) { if (R2[i] <= r2max) cmp[i] = 1;}
+                    if (_mm256_testz_ps(mask, mask)) break;
 
-                    int mask = _mm256_movemask_ps (cmp);
-                    if (!mask) break;
+                    __m256i mask_i = _mm256_castps_si256(mask);
+                    mask_i = _mm256_and_si256(mask_i, _mm256_set1_epi32(1));
 
-                    __m256i cmp_i = _mm256_castps_si256 (cmp);
-                    __m256i SingleBytesMask = _mm256_set_epi32 (0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1);
-                    cmp_i = _mm256_and_si256 ( cmp_i, SingleBytesMask);
+                    N = _mm256_add_epi32(N, mask_i);
 
-                    N = _mm256_add_epi8 (N, cmp_i);                                    //for (int i = 0; i < 4; i++) {N[i] = N[i] + cmp[i];}
-
-                    X = _mm256_add_ps (_mm256_sub_ps (X2, Y2), X0);                    //for (int i = 0; i < 4; i++) { X[i] = X2[i] - Y2[i] + X0[i];}
-                    Y = _mm256_add_ps (_mm256_add_ps (XY, XY), Y0);                    //for (int i = 0; i < 4; i++) { Y[i] = XY[i] + XY[i] + Y0[i];}
+                    X = _mm256_add_ps(_mm256_sub_ps(X2, Y2), X0);
+                    Y = _mm256_add_ps(_mm256_add_ps(XY, XY), Y0);
                 }
             }
 
             #ifndef STAT_MODE
-            _mm256_storeu_si256((__m256i*)pixels, N);
+            alignas(32) int counts[8];
+            _mm256_store_si256((__m256i*)counts, N);
 
-            for (int i = 0; i < 32; i += 4)
+            for (int i = 0; i < 8; i++)
             {
-                pixels[0 + i] =  pixels[1 + i] = pixels[2 + i] = pixels[3 + i];
+                int index = (y_pos * X_WINDOW_SIZE + x_pos + i) * 4;
 
-                pixels[0 + i] = (pixels[0 + i] * 22) % 256;  //R
-                pixels[1 + i] = (pixels[1 + i] * 14) % 256;  //G
-                pixels[2 + i] = (pixels[2 + i] * 17) % 256;  //B
-                pixels[3 + i] = 255;                         //A
-
+                pixels[index    ] = (counts[i] * 22) % 256;
+                pixels[index + 1] = (counts[i] * 14) % 256;
+                pixels[index + 2] = (counts[i] * 17) % 256;
+                pixels[index + 3] = 255;
             }
-            pixels += 32;
             #endif
 
-            //mandelbrot -> n = N[0] + N[1] + N[2] + N[3];
+            mandelbrot -> n = pixels[6];
         }
     }
 
