@@ -31,7 +31,7 @@ $(error Unknown build type: $(BUILD). Use DEBUG or RELEASE)
 endif
 #----------------------------------------------------------------------------------
 
-ALG ?= SIMPLE
+ALG ?= INTRINS
 
 ifeq ($(ALG), SIMPLE)
 CXXFLAGS := -DSIMPLE_ALG $(CXXFLAGS)
@@ -40,7 +40,7 @@ else ifeq ($(ALG), NATIVE)
 CXXFLAGS := -DNATIVE_ALG $(CXXFLAGS) -march=native
 
 else ifeq ($(ALG), INTRINS)
-CXXFLAGS := -DINTRINSICS_ALG $(CXXFLAGS) -mavx2 -mfma
+CXXFLAGS := -DINTRINSICS_ALG $(CXXFLAGS) -mavx2 -mavx
 
 else
 $(error Unknown algorithm type: $(ALG). Use SIMPLE or NATIVE or INTRINS)

@@ -37,6 +37,7 @@
     mandelbrot -> pixels  = pixels;
 
     mandelbrot -> repeat_value = repeat_value;
+    mandelbrot -> n_max = nmax;
 
     return mandelbrot;
 }

@@ -32,6 +32,12 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
                 if (event.key.scancode == sf::Keyboard::Scan::Escape)
                     mandelbrot -> window -> close();
 
+                else if (event.key.scancode == sf::Keyboard::Scan::Up)
+                    mandelbrot -> n_max += 128;
+
+                else if (event.key.scancode == sf::Keyboard::Scan::Down)
+                    mandelbrot -> n_max -= 128;
+
                 else if (event.key.scancode == sf::Keyboard::Scan::W)
                     MoveCenter (mandelbrot, 0, -PIXEL_SHIFT);
 

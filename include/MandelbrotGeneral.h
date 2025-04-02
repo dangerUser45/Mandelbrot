@@ -23,5 +23,6 @@ struct Mandelbrot
     FLOAT_TYPE center_y;     // Центр по Y
 
     int repeat_value;
+    int n_max;
     int n;
 };
