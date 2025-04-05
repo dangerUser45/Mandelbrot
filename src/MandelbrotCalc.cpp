@@ -10,6 +10,10 @@
 #include <immintrin.h>
 #endif
 
+#ifdef INTRINSICS_FAST_ALG
+#include <immintrin.h>
+#endif
+
 #include <MandelbrotCalc.h>
 #include <Color.h>
 
@@ -81,12 +85,14 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end);
-    long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;  //time in milliseconds
-    printf("test time: %Lf milliseconds\r", duration_ms);
+    long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;
+    printf("" RED "Time: %.1Lf ms" RESET "\r", duration_ms);
     fflush(stdout);
+    PrintAverage(ONE_THOUSAND / duration_ms, "\t\t" CYAN "FPS: %.1Lf" RESET "\r");
+
 
     #ifndef STAT_MODE
-    mandelbrot -> texture -> update (pixels);
+    mandelbrot->texture->update(pixels);
     #endif
 }
 #endif
@@ -166,6 +172,97 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end);
+    long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;
+    printf("" RED "Time: %.1Lf ms" RESET "\r", duration_ms);
+    fflush(stdout);
+    PrintAverage(ONE_THOUSAND / duration_ms, "\t\t" CYAN "FPS: %.1Lf" RESET "\r");
+
+
+    #ifndef STAT_MODE
+    mandelbrot->texture->update(pixels);
+    #endif
+}
+#endif
+
+//--------------------------------------------------------------------------------------------------------------------------
+#ifdef INTRINSICS_ALG
+void MandelbrotCalculation (Mandelbrot* mandelbrot)
+{
+    sf::Uint8* pixels = mandelbrot -> pixels;
+    const FLOAT_TYPE pixel_size = mandelbrot -> pixel_size;
+    const FLOAT_TYPE center_x   = mandelbrot -> center_x;
+    const FLOAT_TYPE center_y   = mandelbrot -> center_y;
+
+    const FLOAT_TYPE width  = X_WINDOW_SIZE * pixel_size;
+    const FLOAT_TYPE height = Y_WINDOW_SIZE * pixel_size;
+
+    // Начальные координаты (левый верхний угол)
+    FLOAT_TYPE x0 = center_x - width  / 2;
+    FLOAT_TYPE y0 = center_y + height / 2;
+
+    const int repeat_value = mandelbrot -> repeat_value;
+
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    for (int y_pos = 0; y_pos < Y_WINDOW_SIZE; ++y_pos, y0 -= pixel_size)
+    {
+        x0 = center_x - width / 2;
+
+        for (int x_pos = 0; x_pos < X_WINDOW_SIZE; x_pos += 8, x0 += pixel_size*8)
+        {
+            __m256i N = _mm256_setzero_si256();
+            for (int i = 0; i < repeat_value; i++)
+            {
+                __m256 X0 = _mm256_setr_ps(x0, x0 + pixel_size, x0 + pixel_size*2, x0 + pixel_size*3,
+                                           x0 + pixel_size*4, x0 + pixel_size*5, x0 + pixel_size*6, x0 + pixel_size*7);
+
+                __m256 Y0 = _mm256_set1_ps(y0);
+
+                __m256 X = X0;
+                __m256 Y = Y0;
+
+                for (int n = 0; n < nmax; ++n)
+                {
+                    __m256 X2 = _mm256_mul_ps(X, X);
+                    __m256 Y2 = _mm256_mul_ps(Y, Y);
+                    __m256 XY = _mm256_mul_ps(X, Y);
+
+                    __m256 R2 = _mm256_add_ps(X2, Y2);
+                    __m256 mask = _mm256_cmp_ps(R2, _mm256_set1_ps(r2max), _CMP_LE_OQ);
+
+                    if (_mm256_testz_ps(mask, mask)) break;
+
+                    __m256i mask_i = _mm256_castps_si256(mask);
+                    mask_i = _mm256_and_si256(mask_i, _mm256_set1_epi32(1));
+
+                    N = _mm256_add_epi32(N, mask_i);
+
+                    X = _mm256_add_ps(_mm256_sub_ps(X2, Y2), X0);
+                    Y = _mm256_add_ps(_mm256_add_ps(XY, XY), Y0);
+                }
+            }
+
+            #ifndef STAT_MODE
+            alignas(32) int counts[8];
+            _mm256_store_si256((__m256i*)counts, N);
+
+            for (int i = 0; i < 8; i++)
+            {
+                int index = (y_pos * X_WINDOW_SIZE + x_pos + i) * 4;
+
+                pixels[index    ] = (counts[i] * 22) % 256;
+                pixels[index + 1] = (counts[i] * 14) % 256;
+                pixels[index + 2] = (counts[i] * 17) % 256;
+                pixels[index + 3] = 255;
+            }
+            #endif
+
+            mandelbrot -> n = pixels[6];
+        }
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
     long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;  //time in milliseconds
     printf("test time: %Lf milliseconds\r", duration_ms);
     fflush(stdout);
@@ -177,7 +274,7 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
 #endif
 
 //--------------------------------------------------------------------------------------------------------------------------
-#ifdef INTRINSICS_ALG
+#ifdef INTRINSICS_FAST_ALG
 void MandelbrotCalculation(Mandelbrot* mandelbrot)
 {
     sf::Uint8* pixels = mandelbrot->pixels;

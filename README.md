@@ -35,21 +35,15 @@ make
 ```
 ### Параметры сборки
 Если вы хотите использовать собственные настройки, вы можете использовать  специальные флаги:
-> *<div style= "display:inline-block;
-                width:15px; height:15px;
-                background:#FF5733;
-                border-radius:4px">
-    </div> &emsp;
-    Текст этого цвета будет означать настройки по умолчанию*
+> Подчёркнутый текст будет означать настройки по умолчанию
 
 - **Использование доп. проверок**&emsp; ```BUILD=...```
-    - <font color="#FF5733">Релизный</font>
-        &emsp; &emsp; ```BUILD=RELEASE```
+    - <u>Релизный</u>&emsp; &emsp; ```BUILD=RELEASE```
     - Отладочный &emsp;```BUILD=DEBUG ```
 
 - **Режим отображения**&emsp;```MODE=...```
 
-    - <font color="#FF5733">Графический</font>
+    - <u>Графический</u>
         &emsp; &emsp; ```MODE=PICTURE_MODE```
     - Сбор статистики &emsp;```MODE=STAT_MODE ```
 ------
@@ -57,16 +51,16 @@ make
     - Без отпимизаций (не считая компилятора) &emsp; ```ALG=SIMPLE```
     - C наивным алгоритмом &emsp; ```ALG=NATIVE```
     - C интринсиками &emsp; ```ALG=INTRINS```
-    -  <font color="#FF5733">C ускорением интринсиков</font> &emsp; ```ALG=INTRINS_FAST```
+    -  <u>C ускорением интринсиков</u> &emsp; ```ALG=INTRINS_FAST```
 ------
 - **Тип чисел с плавающей запятой** &emsp; ```FLOAT_TYPE=...```
 
-    - <font color="#FF5733">Использование *float*  в алгоритме</font>
+    - <u>Использование *float*  в алгоритме</u>
         &emsp; &emsp; &emsp; &emsp; &emsp;```FLOAT_TYPE=FLOAT```
     - Использование *double* в алгоритме &emsp; &emsp; &emsp; &emsp; ```FLOAT_TYPE=DOUBLE```
     - Использование *long double* в алгоритме &emsp; ```FLOAT_TYPE=LONG_DOUBLE```
 
-    > **Warning**  ⚠️<br>
+    > ⚠️ **Warning**<br>
     > Тип long double поддерживается только для простого и нативного алгоритмов
 
 ## Запуск
@@ -76,10 +70,10 @@ make run
 ```
 ### Параметр запуски
 - **Количество повторений расчёта одной очки:** &emsp; ```REPEATS=...```
-    - <font color="#FF5733">Без повторений (отрисовка 1 раз)</font> &emsp; ```REPEATS=NO_REPEATS```
+    - <u>Без повторений (отрисовка 1 раз)</u> &emsp; ```REPEATS=NO_REPEATS```
     - Натуральное число: &emsp; &emsp; &emsp; &emsp; &emsp;&emsp;&emsp;```REPEATS=n```,  &emsp; где $n \in \mathbb{N},$&emsp;1 < $n$ < 1000
 
-    > **Warning**  ⚠️<br>
+    > ⚠️ **Warning**<br>
     > Не запускайте программу с $n$, выходящим из диапазона, написанного ранее.
 
 ## Графический режим
@@ -121,3 +115,6 @@ sudo apt install libsfml-dev
 git clone https://github.com/dangerUser45/Mandelbrot/
 cd Mandelbrot
 ```
+
+## Полученные оптимизации
+

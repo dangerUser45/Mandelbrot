@@ -42,6 +42,9 @@ CXXFLAGS := -DNATIVE_ALG $(CXXFLAGS) -march=native
 else ifeq ($(ALG), INTRINS)
 CXXFLAGS := -DINTRINSICS_ALG $(CXXFLAGS) -mavx2 -mavx
 
+else ifeq ($(ALG), INTRINS_FAST)
+CXXFLAGS := -DINTRINSICS_FAST_ALG $(CXXFLAGS) -mavx2 -mavx
+
 else
 $(error Unknown algorithm type: $(ALG). Use SIMPLE or NATIVE or INTRINS)
 endif
