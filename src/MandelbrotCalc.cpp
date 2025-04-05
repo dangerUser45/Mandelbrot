@@ -208,8 +208,8 @@ void MandelbrotCalculation(Mandelbrot* mandelbrot)
             {
                 __m256 X0[INTRIN_LOOP_NUMBER];
                 __m256 Y0[INTRIN_LOOP_NUMBER];
-                __m256 X[INTRIN_LOOP_NUMBER];
-                __m256 Y[INTRIN_LOOP_NUMBER];
+                __m256  X[INTRIN_LOOP_NUMBER];
+                __m256  Y[INTRIN_LOOP_NUMBER];
 
                 // Инициализация начальных значений
                 for (int block = 0; block < INTRIN_LOOP_NUMBER; block++)

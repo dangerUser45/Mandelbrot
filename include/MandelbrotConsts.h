@@ -26,7 +26,7 @@ const FLOAT_TYPE PIXEL_SHIFT            = 10;
 const FLOAT_TYPE ZOOM_RATE              = 1.3;
 
 const int NATIVE_LOOP_NUMBER            = 32;
-const int INTRIN_LOOP_NUMBER            = 4;
+const int INTRIN_LOOP_NUMBER            = 5;
 
 const int NUMBER_COUNTS_AVERAGE         = 15;
 
