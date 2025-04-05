@@ -42,29 +42,29 @@ make
     </div> &emsp;
     Текст этого цвета будет означать настройки по умолчанию*
 
-- **Использование доп. проверок:**&emsp; ```BUILD=...```
-    - <span style="color:#FF5733">Релизный</span>
+- **Использование доп. проверок**&emsp; ```BUILD=...```
+    - <font color="#FF5733">Релизный</font>
         &emsp; &emsp; ```BUILD=RELEASE```
-    - Отладочный: &emsp;```BUILD=DEBUG ```
+    - Отладочный &emsp;```BUILD=DEBUG ```
 
-- **Режим отображения:**&emsp;```MODE=...```
+- **Режим отображения**&emsp;```MODE=...```
 
-    - <span style="color:#FF5733">Графический</span>
+    - <font color="#FF5733">Графический</font>
         &emsp; &emsp; ```MODE=PICTURE_MODE```
-    - Сбор статистики: &emsp;```MODE=STAT_MODE ```
+    - Сбор статистики &emsp;```MODE=STAT_MODE ```
 ------
-- **Использование алгоритма**: &emsp; ```ALG=...```
-    - Без отпимизаций (не считая компилятора): &emsp; ```ALG=SIMPLE```
-    - C наивным алгоритмом: &emsp; ```ALG=NATIVE```
-    - C интринсиками: &emsp; ```ALG=INTRINS```
-    -  <span style="color:#FF5733">C ускорением интринсиков:</span> &emsp; ```ALG=INTRINS_FAST```
+- **Использование алгоритма** &emsp; ```ALG=...```
+    - Без отпимизаций (не считая компилятора) &emsp; ```ALG=SIMPLE```
+    - C наивным алгоритмом &emsp; ```ALG=NATIVE```
+    - C интринсиками &emsp; ```ALG=INTRINS```
+    -  <font color="#FF5733">C ускорением интринсиков</font> &emsp; ```ALG=INTRINS_FAST```
 ------
-- **Тип чисел с плавающей запятой**: &emsp; ```FLOAT_TYPE=...```
+- **Тип чисел с плавающей запятой** &emsp; ```FLOAT_TYPE=...```
 
-    - <span style="color:#FF5733">Использование *float*  в алгоритме:</span>
+    - <font color="#FF5733">Использование *float*  в алгоритме</font>
         &emsp; &emsp; &emsp; &emsp; &emsp;```FLOAT_TYPE=FLOAT```
-    - Использование *double* в алгоритме: &emsp; &emsp; &emsp; &emsp; ```FLOAT_TYPE=DOUBLE```
-    - Использование *long double* в алгоритме: &emsp; ```FLOAT_TYPE=LONG_DOUBLE```
+    - Использование *double* в алгоритме &emsp; &emsp; &emsp; &emsp; ```FLOAT_TYPE=DOUBLE```
+    - Использование *long double* в алгоритме &emsp; ```FLOAT_TYPE=LONG_DOUBLE```
 
     > **Warning**  ⚠️<br>
     > Тип long double поддерживается только для простого и нативного алгоритмов
@@ -75,12 +75,9 @@ make
 make run
 ```
 ### Параметр запуски
-Здесь вы также можете использовать собственные настройки, используя флаги:
-
 - **Количество повторений расчёта одной очки:** &emsp; ```REPEATS=...```
-
-    -  <span style="color:#FF5733">Без повторений (отрисовка 1 раз):</span>&emsp; ```REPEATS=NO_REPEATS```
-    - Натуральное число: &emsp; &emsp; &emsp; &emsp; &emsp;&emsp;&emsp;```REPEATS=n```,  &emsp; где $n \in \mathbb{N},$&emsp;$1 < n < 1000$
+    - <font color="#FF5733">Без повторений (отрисовка 1 раз)</font> &emsp; ```REPEATS=NO_REPEATS```
+    - Натуральное число: &emsp; &emsp; &emsp; &emsp; &emsp;&emsp;&emsp;```REPEATS=n```,  &emsp; где $n \in \mathbb{N},$&emsp;1 < $n$ < 1000
 
     > **Warning**  ⚠️<br>
     > Не запускайте программу с $n$, выходящим из диапазона, написанного ранее.
@@ -110,7 +107,7 @@ make BUILD=RELEASE MODE=PICTURE_MODE ALG=INTRINS FLOAT_TYPE=FLOAT
 make run REPEATS=NO_REPEATS
 ```
 В результате в консоли вы увидете следующее:
-![Example CMD](data/Examle_CMD.png)
+![Example CMD](data/Example_CMD.png)
 
 А также на экране появится окно:
 ![Example display](data/Example_Display.png)
