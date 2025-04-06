@@ -7,9 +7,37 @@
 #endif
 
 #include <MandelbrotLogic.h>
+#include <MandelbrotCalc.h>
 
 #include <SFML/Graphics.hpp>
 
+#ifdef PICTURE_MODE
+#include <MandelbrotDraw.h>
+#endif
+
+#ifdef STAT_MODE
+int counter_time = 0;
+#endif
+
+//--------------------------------------------------------------------------------------------------------------------------
+int MandelbrotMainLoop (Mandelbrot* mandelbrot)
+{
+    #ifdef STAT_MODE
+    while (counter_time <= NUMBER_DIMENSIONS)
+        MandelbrotCalculation (mandelbrot);
+    #endif
+
+    #ifdef PICTURE_MODE
+    while (mandelbrot -> window -> isOpen())
+    {
+        MandelbrotLogicCommon (mandelbrot);
+        MandelbrotCalculation (mandelbrot);
+        DrawSingleIteration   (mandelbrot);
+    }
+    #endif
+
+    return 0;
+}
 //--------------------------------------------------------------------------------------------------------------------------
 void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
 {
@@ -17,6 +45,8 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
 
     while (mandelbrot -> window -> pollEvent(event))
     {
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wswitch-enum"
 
         switch (event.type)
         {
@@ -68,6 +98,7 @@ void MandelbrotLogicCommon (Mandelbrot* mandelbrot)
             default:
                 break;
         }
+        #pragma GCC diagnostic pop
     }
 }
 //--------------------------------------------------------------------------------------------------------------------------

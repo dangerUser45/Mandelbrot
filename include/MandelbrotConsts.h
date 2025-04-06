@@ -30,3 +30,5 @@ const int INTRIN_LOOP_NUMBER            = 5;
 
 const int NUMBER_COUNTS_AVERAGE         = 15;
 
+const int NUMBER_DIMENSIONS             = 20;
+

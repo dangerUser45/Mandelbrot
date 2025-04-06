@@ -7,3 +7,4 @@
 #endif
 
 void DrawSingleIteration (Mandelbrot* mandelbrot);
+void PrintAllTime (timespec* start, timespec* end);

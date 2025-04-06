@@ -20,11 +20,22 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 
+#include <cmath>
+
+#ifdef STAT_MODE
+#include <MandelbrotLogic.h>
+
+extern int counter_time;
+#endif
+
 //--------------------------------------------------------------------------------------------------------------------------
 #ifdef SIMPLE_ALG
 void MandelbrotCalculation (Mandelbrot* mandelbrot)
 {
+    #ifdef PICTURE_MODE
     sf::Uint8* pixels = mandelbrot -> pixels;
+    #endif
+
     const FLOAT_TYPE pixel_size = mandelbrot -> pixel_size;
     const FLOAT_TYPE center_x   = mandelbrot -> center_x;
     const FLOAT_TYPE center_y   = mandelbrot -> center_y;
@@ -70,7 +81,7 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
                 }
             }
 
-            #ifndef STAT_MODE
+            #ifdef PICTURE_MODE
             int index = (y_pos*X_WINDOW_SIZE + x_pos) * 4;
 
             pixels[index    ] = (n * 22) % 256;  //R
@@ -84,15 +95,23 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
         }
     }
 
+
     clock_gettime(CLOCK_MONOTONIC, &end);
     long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;
+
+    #ifndef STAT_MODE
     printf("" RED "Time: %.1Lf ms" RESET "\r", duration_ms);
     fflush(stdout);
     PrintAverage(ONE_THOUSAND / duration_ms, "\t\t" CYAN "FPS: %.1Lf" RESET "\r");
+    #endif
 
+    #ifdef STAT_MODE
+    MeasureTimeData (mandelbrot, duration_ms);
+    fflush(stdout);
+    #endif
 
-    #ifndef STAT_MODE
-    mandelbrot->texture->update(pixels);
+    #ifdef PICTURE_MODE
+    mandelbrot -> texture -> update (pixels);
     #endif
 }
 #endif
@@ -101,7 +120,10 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
 #ifdef NATIVE_ALG
 void MandelbrotCalculation (Mandelbrot* mandelbrot)
 {
+    #ifdef PICTURE_MODE
     sf::Uint8* pixels = mandelbrot -> pixels;
+    #endif
+
     const FLOAT_TYPE pixel_size = mandelbrot -> pixel_size;
     const FLOAT_TYPE center_x   = mandelbrot -> center_x;
     const FLOAT_TYPE center_y   = mandelbrot -> center_y;
@@ -171,15 +193,23 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
         }
     }
 
+
     clock_gettime(CLOCK_MONOTONIC, &end);
     long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;
+
+    #ifdef PICTURE_MODE
     printf("" RED "Time: %.1Lf ms" RESET "\r", duration_ms);
     fflush(stdout);
     PrintAverage(ONE_THOUSAND / duration_ms, "\t\t" CYAN "FPS: %.1Lf" RESET "\r");
+    #endif
 
+    #ifdef STAT_MODE
+    MeasureTimeData (mandelbrot, duration_ms);
+    fflush(stdout);
+    #endif
 
-    #ifndef STAT_MODE
-    mandelbrot->texture->update(pixels);
+    #ifdef PICTURE_MODE
+    mandelbrot -> texture -> update (pixels);
     #endif
 }
 #endif
@@ -188,7 +218,10 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
 #ifdef INTRINSICS_ALG
 void MandelbrotCalculation (Mandelbrot* mandelbrot)
 {
+    #ifdef PICTURE_MODE
     sf::Uint8* pixels = mandelbrot -> pixels;
+    #endif
+
     const FLOAT_TYPE pixel_size = mandelbrot -> pixel_size;
     const FLOAT_TYPE center_x   = mandelbrot -> center_x;
     const FLOAT_TYPE center_y   = mandelbrot -> center_y;
@@ -243,10 +276,10 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
                 }
             }
 
-            #ifndef STAT_MODE
             alignas(32) int counts[8];
             _mm256_store_si256((__m256i*)counts, N);
 
+            #ifndef STAT_MODE
             for (int i = 0; i < 8; i++)
             {
                 int index = (y_pos * X_WINDOW_SIZE + x_pos + i) * 4;
@@ -258,16 +291,25 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
             }
             #endif
 
-            mandelbrot -> n = pixels[6];
+            mandelbrot-> n = counts[7]; // Чтобы компилятор не стирал всю функцию
         }
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end);
-    long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;  //time in milliseconds
-    printf("test time: %Lf milliseconds\r", duration_ms);
-    fflush(stdout);
+    long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;
 
-    #ifndef STAT_MODE
+    #ifdef PICTURE_MODE
+    printf("" RED "Time: %.1Lf ms" RESET "\r", duration_ms);
+    fflush(stdout);
+    PrintAverage(ONE_THOUSAND / duration_ms, "\t\t" CYAN "FPS: %.1Lf" RESET "\r");
+    #endif
+
+    #ifdef STAT_MODE
+    MeasureTimeData (mandelbrot, duration_ms);
+    fflush(stdout);
+    #endif
+
+    #ifdef PICTURE_MODE
     mandelbrot -> texture -> update (pixels);
     #endif
 }
@@ -277,7 +319,10 @@ void MandelbrotCalculation (Mandelbrot* mandelbrot)
 #ifdef INTRINSICS_FAST_ALG
 void MandelbrotCalculation(Mandelbrot* mandelbrot)
 {
-    sf::Uint8* pixels = mandelbrot->pixels;
+    #ifdef PICTURE_MODE
+    sf::Uint8* pixels = mandelbrot -> pixels;
+    #endif
+
     const FLOAT_TYPE pixel_size = mandelbrot->pixel_size;
     const FLOAT_TYPE center_x = mandelbrot->center_x;
     const FLOAT_TYPE center_y = mandelbrot->center_y;
@@ -311,7 +356,8 @@ void MandelbrotCalculation(Mandelbrot* mandelbrot)
                 // Инициализация начальных значений
                 for (int block = 0; block < INTRIN_LOOP_NUMBER; block++)
                 {
-                    X0[block] = _mm256_setr_ps(
+                    X0[block] = _mm256_setr_ps
+                    (
                         x0 + pixel_size*(block*8 + 0),
                         x0 + pixel_size*(block*8 + 1),
                         x0 + pixel_size*(block*8 + 2),
@@ -356,12 +402,12 @@ void MandelbrotCalculation(Mandelbrot* mandelbrot)
                 }
             }
 
-            #ifndef STAT_MODE
             alignas(32) int counts[INTRIN_LOOP_NUMBER][8];
             for (int block = 0; block < INTRIN_LOOP_NUMBER; block++)
             {
                 _mm256_store_si256((__m256i*)counts[block], N[block]);
 
+                #ifndef STAT_MODE
                 for (int j = 0; j < 8; j++)
                 {
                     int index = (y_pos * X_WINDOW_SIZE + x_pos + block*8 + j) * 4;
@@ -374,20 +420,30 @@ void MandelbrotCalculation(Mandelbrot* mandelbrot)
                         pixels[index + 3] = 255;
                     }
                 }
+                #endif
             }
-            #endif
+
+            mandelbrot -> n = counts[1][1];
         }
     }
 
+
     clock_gettime(CLOCK_MONOTONIC, &end);
     long double duration_ms = (end.tv_sec - start.tv_sec) * ONE_THOUSAND + (end.tv_nsec - start.tv_nsec) / ONE_MILLION;
+
+    #ifdef PICTURE_MODE
     printf("" RED "Time: %.1Lf ms" RESET "\r", duration_ms);
     fflush(stdout);
     PrintAverage(ONE_THOUSAND / duration_ms, "\t\t" CYAN "FPS: %.1Lf" RESET "\r");
+    #endif
 
+    #ifdef STAT_MODE
+    MeasureTimeData (mandelbrot, duration_ms);
+    fflush(stdout);
+    #endif
 
-    #ifndef STAT_MODE
-    mandelbrot->texture->update(pixels);
+    #ifdef PICTURE_MODE
+    mandelbrot -> texture -> update (pixels);
     #endif
 }
 #endif
@@ -405,10 +461,16 @@ void PrintAverage (long double single_value, const char* format_string)
             values [0] += values[i];
             counter = 0;
         }
+
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-nonliteral"
+
         printf (format_string, values[0] / NUMBER_COUNTS_AVERAGE);
+
+        #pragma GCC diagnostic pop
+
         fflush(stdout);
         return;
-
     }
 
     values[counter] = single_value;
@@ -417,4 +479,52 @@ void PrintAverage (long double single_value, const char* format_string)
 
     return;
 }
+//--------------------------------------------------------------------------------------------------------------------------
+#ifdef STAT_MODE
+void MeasureTimeData (Mandelbrot* mandelbrot, long double duration_ms)
+{
+    long double* time_array = mandelbrot -> time_array;
+
+    if (counter_time == NUMBER_DIMENSIONS)
+    {
+        for (int i = 0; i < NUMBER_COUNTS_AVERAGE; ++i)
+        {
+            time_array[NUMBER_DIMENSIONS] += time_array[i];
+            ++counter_time;
+            //counter_time   = 0;
+        }
+
+        time_array[NUMBER_DIMENSIONS] /= NUMBER_COUNTS_AVERAGE;
+        AccuracyCalculation (mandelbrot);
+        fflush(stdout);
+
+        return;
+
+    }
+    time_array[counter_time] = duration_ms;
+    printf ("%2d. Current time = %Lf milliseconds\n", counter_time + 1, time_array[counter_time]);
+    ++counter_time;
+}
+//--------------------------------------------------------------------------------------------------------------------------
+long double AccuracyCalculation (Mandelbrot* mandelbrot)
+{
+    long double* time_array = mandelbrot -> time_array;
+    long double sigma_time  = 0;
+    long double average_time = time_array[NUMBER_DIMENSIONS];
+
+    for (int i = 0; i < NUMBER_DIMENSIONS; ++i)
+        sigma_time += (time_array[i] - average_time) * (time_array[i] - average_time);
+
+    sigma_time = sqrtl(sigma_time / (NUMBER_DIMENSIONS * (NUMBER_DIMENSIONS - 1)));
+
+    printf ("\n" MAGENTA ";-----------------------------------------------------;"
+            "\n"         ";                                                     ;"
+            "\n"         "; Measured value:   " RESET YELLOW "(%.2lf +- %.2lf ) milliseconds    " MAGENTA ";"
+            "\n"         ";                                                     ;"
+            "\n"         ";-----------------------------------------------------;\n" RESET, round(average_time * 10) / 10, round(sigma_time * 10) / 10);
+
+    return sigma_time;
+}
+
+#endif
 //--------------------------------------------------------------------------------------------------------------------------
