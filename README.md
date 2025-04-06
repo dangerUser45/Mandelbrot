@@ -3,8 +3,11 @@
 #  Mandelbrot
 ![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white) &emsp;
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black) &emsp;
- <img src="data/SFML_Logo.svg"  alt="Описание" width="90" height=""> &emsp; <img src="data/Intel_Logo.svg" alt="Описание" width="50" height=""> &emsp;
- <img src="data/MIPT_Logo.svg"  alt="Описание" width="70" height="">
+<img src="data/SFML_Logo.svg"  alt="Описание" width="90" height=""> &emsp;
+<img src="data/Intel_Logo.svg" alt="Описание" width="50" height=""> &emsp;
+<img src="data/MIPT_Logo.svg"  alt="Описание" width="70" height=""> &emsp;
+<img src="data/FRKT_Logo.svg"  alt="Описание" width="70" height=""> &emsp;
+
 
 В данном проекте основной целью было оптимизировать построение
 [**множества Мандельброта**](https://ru.wikipedia.org/wiki/%D0%9C%D0%BD%D0%BE%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D0%BE_%D0%9C%D0%B0%D0%BD%D0%B4%D0%B5%D0%BB%D1%8C%D0%B1%D1%80%D0%BE%D1%82%D0%B0) - классической задачи на параллелизм с помощью различных методов, в том числе использующих поддержку на аппаратном уровне.
@@ -123,8 +126,8 @@ cd Mandelbrot
 Время прорисовки экрана 1600x960 пикселей в миллисекундах для 10 повторений в режиме статистики (MODE=STAT_MODE)
 
 |                   | float        | double       | long double |
-|:------------------|:------------:|:------------:|:-----------:|
-| simple            |  1028  ± 13  |  1036  ± 15  |  1156 ± 15  |
-| native            |  144   ± 1   |  259   ± 3   |      -      |
-| intrinsics        |  146   ± 1   |      -       |      -      |
-| unroll intrinsics |  66.0  ± 0.5 |      -       |      -      |
+|:------------------|:-------------|:-------------|:------------|
+| simple            | 1028  ±  13  | 1036  ±  15  | 1156  ±  15 |
+| native            | 144   ±  1   | 259   ±  3   |      -      |
+| intrinsics        | 146   ±  1   |      -       |      -      |
+| unroll intrinsics | 66.0  ±  0.5 |      -       |      -      |
